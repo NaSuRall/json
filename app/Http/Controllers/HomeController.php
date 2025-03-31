@@ -27,12 +27,22 @@ class HomeController extends Controller
         }
 
         foreach ($data as $student) {
-          User::create([
-              'name' => $student['name'],
-              'email' => $student['email'],
-              'password' => Hash::make($student['password']),
-          ]);
+            // Vérification si l'email existe déjà dans la base de données
+            $existingUser = User::where('email', $student['email'])->first();
 
+            if (!$existingUser) {
+                // Si l'utilisateur n'existe pas, création
+                User::create([
+                    'name' => $student['name'],
+                    'email' => $student['email'],
+                    'password' => bcrypt('default_password'), // Assurez-vous de chiffrer le mot de passe
+                    'role' => 'student', // Ou récupérer le rôle depuis le JSON
+                    'promotion_id' => $student['promotion_id'], // Assurez-vous de récupérer la promotion de manière appropriée
+                ]);
+            } else {
+                // Si l'utilisateur existe déjà, on passe à l'élément suivant
+                continue;
+            }
         }
         return redirect()->back()->with('success', 'Étudiants importés avec succès !');
     }
