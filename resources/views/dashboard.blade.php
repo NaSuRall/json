@@ -17,6 +17,8 @@
 @if(session('error'))
     <div class="alert alert-danger">{{ session('error') }}</div>
 @endif
+
+
 <form action="{{ route('admin.import.students') }}" method="POST" enctype="multipart/form-data">
     @csrf
     <div class="mb-3">
@@ -36,6 +38,11 @@
             <li>{{ $data->name }}</li>
             <li>{{ $data->email }}</li>
         </ul>
+        <form action="{{ route('students.destroy', $data->id) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-danger">Supprimer</button>
+        </form>
     @endforeach
 
 

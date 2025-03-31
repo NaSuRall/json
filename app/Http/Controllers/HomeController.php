@@ -36,4 +36,17 @@ class HomeController extends Controller
         }
         return redirect()->back()->with('success', 'Étudiants importés avec succès !');
     }
+
+
+    public function destroy($id)
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            return redirect()->back()->with('error', 'Utilisateur introuvable.');
+        }
+
+        $user->delete();
+        return redirect()->back()->with('success', 'Utilisateur supprimé avec succès.');
+    }
 }
